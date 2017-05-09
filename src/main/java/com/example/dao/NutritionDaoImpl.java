@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,28 +31,27 @@ public class NutritionDaoImpl implements NutritionDao {
     @Override
     public void add(Nutrition nutrition) {
         if(nutrition != null){
-            jdbcTemplate.execute(String.format("INSERT INTO nutrition (product, calories, carbs) VALUES (%s, %s, %s)", nutrition.getProduct(),nutrition.getCalories(),nutrition.getCarbs()));
+            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs) VALUES (?,?,?)", nutrition.getProduct(),nutrition.getCalories(),nutrition.getCarbs());
         }
     }
 
     @Override
     public List<Nutrition> findAll() {
-        List<Map<String,Object>> results = jdbcTemplate.queryForList("select * from nutrition");
-        List<Nutrition> nutritions = new ArrayList<>();
-        for(Map<String,Object> map : results){
-            Nutrition nut = new Nutrition();
-            System.out.println("....");
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                System.out.println("key is " + entry.getKey());
-                System.out.println("value is " + entry.getValue());
-            }
-            nut.setId((int)map.get("id"));
-            nut.setCalories((int)map.get("calories"));
-            nut.setCarbs((int)map.get("carbs"));
-            nut.setProduct((String)map.get("product"));
-            nutritions.add(nut);
-        }
-        System.out.println(results);
+        List<Nutrition> nutritions = jdbcTemplate.query("SELECT * FROM nutrition", new NutritionMapper());
         return nutritions;
     }
+
+
+    public static class NutritionMapper implements RowMapper<Nutrition>{
+        @Override
+        public Nutrition mapRow(ResultSet resultSet, int i) throws SQLException {
+            Nutrition nutrition = new Nutrition();
+            nutrition.setProduct(resultSet.getString("product"));
+            nutrition.setCarbs(resultSet.getInt("carbs"));
+            nutrition.setCalories(resultSet.getInt("calories"));
+            nutrition.setId(resultSet.getLong("id"));
+            return nutrition;
+        }
+    }
+
 }
