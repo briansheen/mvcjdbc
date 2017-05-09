@@ -34,7 +34,7 @@ public class NutritionDaoImpl implements NutritionDao {
     }
 
     @Override
-    public List findAll() {
+    public List<Nutrition> findAll() {
         List<Map<String,Object>> results = jdbcTemplate.queryForList("select * from nutrition");
         List<Nutrition> nutritions = new ArrayList<>();
         for(Map<String,Object> map : results){

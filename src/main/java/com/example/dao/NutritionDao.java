@@ -10,6 +10,6 @@ import java.util.List;
 public interface NutritionDao {
 
     void add(Nutrition nutrition);
-    List findAll();
+    List<Nutrition> findAll();
 
 }
