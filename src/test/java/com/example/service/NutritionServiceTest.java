@@ -1,33 +1,35 @@
-package com.example.dao;
+package com.example.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.example.service.NutritionService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.domain.Nutrition;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class NutritionDaoTest {
+public class NutritionServiceTest {
 
     Random random = new Random();
 
     @Autowired
-    NutritionDao nutritionDao;
+    NutritionService nutritionService;
 
     @Test
     public void testCreate() {
         Nutrition nutrition = createRandomNutrition();
-        nutritionDao.add(nutrition);
+        nutritionService.add(nutrition);
 
-        List<Nutrition> nutritions = nutritionDao.findAll();
+        List<Nutrition> nutritions = nutritionService.findAll();
 
         Assert.assertNotNull(nutritions);
         Assert.assertTrue(nutritions.size() > 0);
@@ -41,9 +43,9 @@ public class NutritionDaoTest {
     @Test
     public void testUpdate() {
         Nutrition nutrition = createRandomNutrition();
-        nutritionDao.add(nutrition);
+        nutritionService.add(nutrition);
 
-        List<Nutrition> nutritions = nutritionDao.findAll();
+        List<Nutrition> nutritions = nutritionService.findAll();
 
         Nutrition foundNut = null;
         foundNut = findNutrition(nutritions, nutrition);
@@ -51,23 +53,28 @@ public class NutritionDaoTest {
         Assert.assertNotNull(foundNut);
         Assert.assertTrue(foundNut.getId() > 0);
 
-        Nutrition nutritionFromFind = nutritionDao.find(foundNut.getId());
+        Nutrition nutritionFromFind = nutritionService.find(foundNut.getId());
         Assert.assertEquals(foundNut, nutritionFromFind);
 
         Nutrition nutritionToUpdate = updateNutritionRandom(foundNut.getId());
+        nutritionToUpdate.setProduct(null);
+        try {
+            nutritionService.update(nutritionToUpdate);
+            Assert.fail("Should not be able to add a nutrition with null product");
+        } catch (DataIntegrityViolationException e) {
+            Assert.assertTrue(true);
+        }
 
-        nutritionDao.update(nutritionToUpdate);
-        Nutrition nutritionAfterUpdate = nutritionDao.find(nutritionToUpdate.getId());
-
-        Assert.assertEquals(nutritionToUpdate, nutritionAfterUpdate);
+        nutritionFromFind = nutritionService.find(foundNut.getId());
+        Assert.assertEquals(foundNut, nutritionFromFind);
     }
 
     @Test
     public void testDelete() {
         Nutrition nutrition = createRandomNutrition();
-        nutritionDao.add(nutrition);
+        nutritionService.add(nutrition);
 
-        List<Nutrition> nutritions = nutritionDao.findAll();
+        List<Nutrition> nutritions = nutritionService.findAll();
 
         Nutrition foundNut = null;
         foundNut = findNutrition(nutritions, nutrition);
@@ -75,21 +82,20 @@ public class NutritionDaoTest {
         Assert.assertNotNull(foundNut);
         Assert.assertTrue(foundNut.getId() > 0);
 
-        nutritionDao.delete(foundNut.getId());
+        nutritionService.delete(foundNut.getId());
 
         boolean notFound = false;
-        nutritions = nutritionDao.findAll();
+        nutritions = nutritionService.findAll();
         notFound = findNutrition(nutritions, foundNut, notFound);
 
         Assert.assertFalse(notFound);
-
-        Assert.assertNull(nutritionDao.find(foundNut.getId()));
     }
 
     @Test
     public void testAdd() {
         Nutrition nutrition1 = createRandomNutrition();
         Nutrition nutrition2 = createRandomNutrition();
+        nutrition2.setProduct("01234567890123456789012345678901234567890");
 
         Assert.assertNotEquals(nutrition1, nutrition2);
 
@@ -100,17 +106,23 @@ public class NutritionDaoTest {
 
         Assert.assertNotNull(nutritionList);
 
-        nutritionDao.add(nutritionList);
+        try {
+            nutritionService.add(nutritionList);
+            Assert.fail("should not be able to add product string longer than 40 chars");
+        } catch (DataIntegrityViolationException e) {
+            Assert.assertTrue(true);
+        }
 
-        List<Nutrition> nutritions = nutritionDao.findAll();
+        List<Nutrition> nutritions = nutritionService.findAll();
 
-        Nutrition foundNut1 = findNutrition(nutritions, nutrition1);
-        Nutrition afterFindNut1 = nutritionDao.find(foundNut1.getId());
-        Assert.assertEquals(foundNut1, afterFindNut1);
+        boolean foundNut1 = false;
+        foundNut1 = findNutrition(nutritions, nutrition1, foundNut1);
 
-        Nutrition foundNut2 = findNutrition(nutritions, nutrition2);
-        Nutrition afterFindNut2 = nutritionDao.find(foundNut2.getId());
-        Assert.assertEquals(foundNut2, afterFindNut2);
+        boolean foundNut2 = false;
+        foundNut2 = findNutrition(nutritions, nutrition2, foundNut2);
+
+        Assert.assertFalse("Should not have found nutrition1", foundNut1);
+        Assert.assertFalse("Should not have found nutrition2", foundNut2);
     }
 
     private Nutrition createRandomNutrition() {

@@ -5,6 +5,7 @@ import com.example.domain.Nutrition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -29,9 +30,36 @@ public class NutritionDaoImpl implements NutritionDao {
     JdbcTemplate jdbcTemplate;
 
     @Override
+    public Nutrition find(long id) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM nutrition WHERE nutrition.id = ?", new NutritionMapper(), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void update(Nutrition nutrition) {
+        jdbcTemplate.update("UPDATE nutrition SET nutrition.product = ?, nutrition.calories = ?, nutrition.carbs = ? WHERE nutrition.id = ?", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs(), nutrition.getId());
+    }
+
+    @Override
+    public void delete(long id) {
+        jdbcTemplate.update("DELETE FROM nutrition WHERE nutrition.id = ?", id);
+    }
+
+    @Override
+    public void add(List<Nutrition> nutritions) {
+        for (Nutrition nutrition : nutritions) {
+            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs) VALUES (?,?,?)", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs());
+        }
+
+    }
+
+    @Override
     public void add(Nutrition nutrition) {
-        if(nutrition != null){
-            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs) VALUES (?,?,?)", nutrition.getProduct(),nutrition.getCalories(),nutrition.getCarbs());
+        if (nutrition != null) {
+            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs) VALUES (?,?,?)", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs());
         }
     }
 
@@ -42,7 +70,7 @@ public class NutritionDaoImpl implements NutritionDao {
     }
 
 
-    public static class NutritionMapper implements RowMapper<Nutrition>{
+    public static class NutritionMapper implements RowMapper<Nutrition> {
         @Override
         public Nutrition mapRow(ResultSet resultSet, int i) throws SQLException {
             Nutrition nutrition = new Nutrition();

@@ -1,13 +1,13 @@
-package com.example.dao;
+package com.example.service;
 
 import com.example.domain.Nutrition;
 
 import java.util.List;
 
 /**
- * Created by bsheen on 5/8/17.
+ * Created by bsheen on 5/9/17.
  */
-public interface NutritionDao {
+public interface NutritionService {
 
     void add(Nutrition nutrition);
 
@@ -20,5 +20,4 @@ public interface NutritionDao {
     void delete(long id);
 
     void add(List<Nutrition> nutritions);
-
 }
