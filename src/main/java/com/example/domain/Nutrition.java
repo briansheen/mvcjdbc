@@ -54,9 +54,11 @@ public class Nutrition {
         return product.equals(that.product);
     }
 
+
     @Override
     public int hashCode() {
-        int result = product.hashCode();
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (product != null ? product.hashCode() : 0);
         result = 31 * result + calories;
         result = 31 * result + carbs;
         return result;
