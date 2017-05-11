@@ -1,31 +1,51 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Getting Started: Handling Form Submission</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
 </head>
 <body>
-<h1>Nutritions</h1>
-<form action="#" th:action="@{/nutritions}" th:object="${nutritionList}" method="post">
-    <table>
-        <thead>
-        <tr>
-            <th>id</th>
-            <th>product</th>
-            <th>carbs</th>
-            <th>calories</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="nutrition : ${nutritionList}">
-        <td th:text="${nutrition.getId()}"></td>
-        <td th:text="${nutrition.getProduct()}"></td>
-        <td th:text="${nutrition.getCarbs()}"></td>
-        <td th:text="${nutrition.getCalories()}"></td>
-        </tr>
-        </tbody>
-    </table>
+<h1 class="display-3 text-center">Nutrition Table</h1>
+<form action="#" th:action="@{/nutritions}" th:object="${nutritionList}" method="post" class="text-center">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <table align="center" class="table table-bordered table-responsive table-hover">
+                    <thead class="thead-inverse">
+                    <tr>
+                        <th>id</th>
+                        <th>product</th>
+                        <th>carbs</th>
+                        <th>calories</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="nutrition : ${nutritionList}">
+                        <td th:text="${nutrition.getId()}"></td>
+                        <td th:text="${nutrition.getProduct()}"></td>
+                        <td th:text="${nutrition.getCarbs()}"></td>
+                        <td th:text="${nutrition.getCalories()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <p><a href="/nutrition"><input type="button" value="Add Nutrition"/></a></p>
 </form>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
 </body>
 </html>
