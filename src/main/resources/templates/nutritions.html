@@ -11,32 +11,28 @@
 </head>
 <body>
 <h1 class="display-3 text-center">Nutrition Table</h1>
-<form action="#" th:action="@{/nutritions}" th:object="${nutritionList}" method="post" class="text-center">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-3">
-                <table align="center" class="table table-bordered table-responsive table-hover">
-                    <thead class="thead-inverse">
-                    <tr>
-                        <th>id</th>
-                        <th>product</th>
-                        <th>carbs</th>
-                        <th>calories</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="nutrition : ${nutritionList}">
-                        <td th:text="${nutrition.getId()}"></td>
-                        <td th:text="${nutrition.getProduct()}"></td>
-                        <td th:text="${nutrition.getCarbs()}"></td>
-                        <td th:text="${nutrition.getCalories()}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<form action="#" th:action="@{/nutritions}" th:object="${nutritionList}" method="post">
+    <div class="container mx-auto" style="width: 900px;">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-inverse">
+            <tr>
+                <th>id</th>
+                <th>product</th>
+                <th>carbs</th>
+                <th>calories</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="nutrition : ${nutritionList}">
+                <td th:text="${nutrition.getId()}"></td>
+                <td th:text="${nutrition.getProduct()}"></td>
+                <td th:text="${nutrition.getCarbs()}"></td>
+                <td th:text="${nutrition.getCalories()}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <p><a href="/nutrition"><input type="button" value="Add Nutrition"/></a></p>
+    <p class="text-center"><a href="/nutrition"><input type="button" value="Add Nutrition"/></a></p>
 </form>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"

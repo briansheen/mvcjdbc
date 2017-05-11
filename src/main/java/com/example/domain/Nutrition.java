@@ -1,13 +1,26 @@
 package com.example.domain;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Created by bsheen on 5/8/17.
  */
 public class Nutrition {
 
     private long id;
+
+    @NotNull
+    @Size(min=2, max=50)
     private String product;
+
+    @Min(0)
+    @NotNull
     private int calories;
+
+    @Min(0)
+    @NotNull
     private int carbs;
 
     public long getId() {
