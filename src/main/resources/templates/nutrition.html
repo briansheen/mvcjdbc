@@ -26,6 +26,17 @@
                 <td>Calories:</td>
                 <td><input type="text" th:field="*{calories}"/></td>
             </tr>
+            <tr>
+                <td>Food Group:</td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{group}">
+                            <option th:each="group:${foodGroup}" th:value="${group}"
+                                    th:text="${group}"></option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
         </table>
     </div>
     <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.common.FoodGroup;
 import com.example.domain.Nutrition;
 import com.example.service.NutritionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class NutritionController {
     @GetMapping("/nutrition")
     public String addNutrition(Model model) {
         model.addAttribute("nutrition", new Nutrition());
+        model.addAttribute("foodGroup", FoodGroup.values());
         return "nutrition";
     }
 

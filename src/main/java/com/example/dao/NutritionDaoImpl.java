@@ -1,6 +1,7 @@
 package com.example.dao;
 
 import com.example.Application;
+import com.example.common.FoodGroup;
 import com.example.domain.Nutrition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,6 @@ public class NutritionDaoImpl implements NutritionDao {
 
     private static final Logger log = LoggerFactory.getLogger(NutritionDaoImpl.class);
 
-
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -40,7 +40,7 @@ public class NutritionDaoImpl implements NutritionDao {
 
     @Override
     public void update(Nutrition nutrition) {
-        jdbcTemplate.update("UPDATE nutrition SET nutrition.product = ?, nutrition.calories = ?, nutrition.carbs = ? WHERE nutrition.id = ?", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs(), nutrition.getId());
+        jdbcTemplate.update("UPDATE nutrition SET nutrition.product = ?, nutrition.calories = ?, nutrition.carbs = ?, nutrition.foodgroup = ? WHERE nutrition.id = ?", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs(), nutrition.getGroup().name(), nutrition.getId());
     }
 
     @Override
@@ -51,15 +51,14 @@ public class NutritionDaoImpl implements NutritionDao {
     @Override
     public void add(List<Nutrition> nutritions) {
         for (Nutrition nutrition : nutritions) {
-            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs) VALUES (?,?,?)", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs());
+            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs, foodgroup) VALUES (?,?,?,?)", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs(), nutrition.getGroup().name());
         }
-
     }
 
     @Override
     public void add(Nutrition nutrition) {
         if (nutrition != null) {
-            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs) VALUES (?,?,?)", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs());
+            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs, foodgroup) VALUES (?,?,?,?)", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs(), nutrition.getGroup().name());
         }
     }
 
@@ -69,7 +68,6 @@ public class NutritionDaoImpl implements NutritionDao {
         return nutritions;
     }
 
-
     public static class NutritionMapper implements RowMapper<Nutrition> {
         @Override
         public Nutrition mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -78,6 +76,7 @@ public class NutritionDaoImpl implements NutritionDao {
             nutrition.setCarbs(resultSet.getInt("carbs"));
             nutrition.setCalories(resultSet.getInt("calories"));
             nutrition.setId(resultSet.getLong("id"));
+            nutrition.setGroup(FoodGroup.valueOf(resultSet.getString("foodgroup")));
             return nutrition;
         }
     }

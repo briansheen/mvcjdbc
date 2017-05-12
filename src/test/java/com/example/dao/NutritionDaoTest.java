@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.example.common.FoodGroup;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -116,23 +117,26 @@ public class NutritionDaoTest {
     private Nutrition createRandomNutrition() {
         Nutrition nutrition = new Nutrition();
 
-        String product = Integer.toString(random.nextInt());
+        String product = Integer.toString(random.nextInt(3000));
         nutrition.setProduct(product);
 
-        int calories = random.nextInt();
+        int calories = random.nextInt(3000);
         nutrition.setCalories(calories);
 
-        int carbs = random.nextInt();
+        int carbs = random.nextInt(3000);
         nutrition.setCarbs(carbs);
+
+        nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
 
         return nutrition;
     }
 
     private Nutrition updateNutritionRandom(long id) {
         Nutrition nutrition = new Nutrition();
-        nutrition.setProduct(Integer.toString(random.nextInt()));
-        nutrition.setCalories(random.nextInt());
-        nutrition.setCarbs(random.nextInt());
+        nutrition.setProduct(Integer.toString(random.nextInt(3000)));
+        nutrition.setCalories(random.nextInt(3000));
+        nutrition.setCarbs(random.nextInt(3000));
+        nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
         nutrition.setId(id);
         return nutrition;
     }

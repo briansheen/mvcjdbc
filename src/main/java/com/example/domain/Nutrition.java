@@ -1,5 +1,7 @@
 package com.example.domain;
 
+import com.example.common.FoodGroup;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,7 +14,7 @@ public class Nutrition {
     private long id;
 
     @NotNull
-    @Size(min=2, max=50)
+    @Size(min = 2, max = 50)
     private String product;
 
     @Min(0)
@@ -22,6 +24,10 @@ public class Nutrition {
     @Min(0)
     @NotNull
     private int carbs;
+
+    @NotNull
+    private FoodGroup group;
+
 
     public long getId() {
         return id;
@@ -55,25 +61,33 @@ public class Nutrition {
         this.carbs = carbs;
     }
 
+    public FoodGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(FoodGroup group) {
+        this.group = group;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Nutrition that = (Nutrition) o;
+        Nutrition nutrition = (Nutrition) o;
 
-        if (calories != that.calories) return false;
-        if (carbs != that.carbs) return false;
-        return product.equals(that.product);
+        if (calories != nutrition.calories) return false;
+        if (carbs != nutrition.carbs) return false;
+        if (product != null ? !product.equals(nutrition.product) : nutrition.product != null) return false;
+        return group == nutrition.group;
     }
-
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (product != null ? product.hashCode() : 0);
+        int result = product != null ? product.hashCode() : 0;
         result = 31 * result + calories;
         result = 31 * result + carbs;
+        result = 31 * result + (group != null ? group.hashCode() : 0);
         return result;
     }
 
@@ -84,6 +98,7 @@ public class Nutrition {
                 ", product='" + product + '\'' +
                 ", calories=" + calories +
                 ", carbs=" + carbs +
+                ", group=" + group +
                 '}';
     }
 }

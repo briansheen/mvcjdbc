@@ -20,6 +20,7 @@
                 <th>product</th>
                 <th>carbs</th>
                 <th>calories</th>
+                <th>foodgroup</th>
             </tr>
             </thead>
             <tbody>
@@ -28,6 +29,7 @@
                 <td th:text="${nutrition.getProduct()}"></td>
                 <td th:text="${nutrition.getCarbs()}"></td>
                 <td th:text="${nutrition.getCalories()}"></td>
+                <td th:text="${nutrition.getGroup().name()}"></td>
             </tr>
             </tbody>
         </table>
