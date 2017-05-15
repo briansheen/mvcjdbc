@@ -25,11 +25,11 @@
             </thead>
             <tbody>
             <tr th:each="nutrition : ${nutritionList}">
-                <td th:text="${nutrition.getId()}"></td>
-                <td th:text="${nutrition.getProduct()}"></td>
-                <td th:text="${nutrition.getCarbs()}"></td>
-                <td th:text="${nutrition.getCalories()}"></td>
-                <td th:text="${nutrition.getGroup().name()}"></td>
+                <td><a th:text="${nutrition.id}" th:href="@{'/nutrition/'+${nutrition.id}}"></a></td>
+                <td th:text="${nutrition.product}"></td>
+                <td th:text="${nutrition.carbs}"></td>
+                <td th:text="${nutrition.calories}"></td>
+                <td th:text="${nutrition.group.name()}"></td>
             </tr>
             </tbody>
         </table>

@@ -14,7 +14,7 @@ public class Nutrition {
     private long id;
 
     @NotNull
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 40)
     private String product;
 
     @Min(0)

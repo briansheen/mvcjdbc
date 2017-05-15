@@ -40,7 +40,7 @@ public class NutritionDaoImpl implements NutritionDao {
 
     @Override
     public void update(Nutrition nutrition) {
-        jdbcTemplate.update("UPDATE nutrition SET nutrition.product = ?, nutrition.calories = ?, nutrition.carbs = ?, nutrition.foodgroup = ? WHERE nutrition.id = ?", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs(), nutrition.getGroup().name(), nutrition.getId());
+            jdbcTemplate.update("UPDATE nutrition SET nutrition.product = ?, nutrition.calories = ?, nutrition.carbs = ?, nutrition.foodgroup = ? WHERE nutrition.id = ?", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs(), nutrition.getGroup().name(), nutrition.getId());
     }
 
     @Override

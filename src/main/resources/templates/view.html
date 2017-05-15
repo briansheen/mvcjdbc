@@ -10,36 +10,33 @@
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
 </head>
 <body>
-<h1 class="display-4 text-center">Add Nutrition</h1>
-<form class="text-center" action="#" th:action="@{/nutrition}" th:object="${nutrition}" method="post">
-    <div class="container mx-auto" style="width: 700px;">
-        <table class="table">
+<h1 class="display-4 text-center">Nutrition View</h1>
+<form class="text-center" action="#" th:action="@{'/nutrition/'+${nutrition.id}}" th:object="${nutrition}" method="post">
+    <div class="container mx-auto" style="width: 400px;">
+        <table class="table table-bordered table-hover">
             <tr>
-                <td>Product:</td>
-                <td><input type="text" th:field="*{product}"/></td>
+                <td class="table-inverse">ID:</td>
+                <td th:text="${nutrition.id}"></td>
             </tr>
             <tr>
-                <td>Carbs:</td>
-                <td><input type="text" th:field="*{carbs}"/></td>
+                <td class="table-inverse">Product:</td>
+                <td th:text="${nutrition.product}"></td>
             </tr>
             <tr>
-                <td>Calories:</td>
-                <td><input type="text" th:field="*{calories}"/></td>
+                <td class="table-inverse">Carbs:</td>
+                <td th:text="${nutrition.carbs}"></td>
             </tr>
             <tr>
-                <td>Food Group:</td>
-                <td>
-                    <div class="form-group">
-                        <select class="form-control" th:field="*{group}">
-                            <option th:each="group:${foodGroup}" th:value="${group}"
-                                    th:text="${group}"></option>
-                        </select>
-                    </div>
-                </td>
+                <td class="table-inverse">Calories:</td>
+                <td th:text="${nutrition.calories}"></td>
+            </tr>
+            <tr>
+                <td class="table-inverse">Food Group:</td>
+                <td th:text="${nutrition.group.name()}"></td>
             </tr>
         </table>
     </div>
-    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/> <a href="/nutritions"><input type="button" value="Cancel"/></a> </p>
+    <p><a href="/nutritions"><input type="button" value="Back to Nutrition Table"/></a> <a th:href="'/nutrition/edit/'+${nutrition.id}"><input type="button" value="Edit"/></a></p>
 </form>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"

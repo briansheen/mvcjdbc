@@ -38,7 +38,6 @@ public class NutritionServiceImpl implements NutritionService {
     @Transactional
     public void update(Nutrition nutrition) {
         nutritionDao.update(nutrition);
-
     }
 
     @Override

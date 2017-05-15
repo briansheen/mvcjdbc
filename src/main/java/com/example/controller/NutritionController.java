@@ -9,8 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.jws.WebParam;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,7 @@ public class NutritionController {
     @PostMapping("/nutrition")
     public String nutritionSubmit(Model model, @Valid Nutrition nutrition, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
+            model.addAttribute("foodGroup", FoodGroup.values());
             return "nutritionError";
         }
         nutritionService.add(nutrition);
@@ -48,4 +51,34 @@ public class NutritionController {
         return "nutritions";
     }
 
+    @GetMapping("/nutrition/{id}")
+    public String view(Model model, @PathVariable("id") Long id){
+        model.addAttribute("nutrition",nutritionService.find(id));
+        return "view";
+    }
+
+    @GetMapping("nutrition/edit/{id}")
+    public String edit(Model model, @PathVariable("id") Long id){
+        model.addAttribute("nutrition",nutritionService.find(id));
+        model.addAttribute("foodGroup", FoodGroup.values());
+        return "edit";
+    }
+
+    @PostMapping("nutrition/edit/{id}")
+    public String editSubmit(Model model, @Valid Nutrition nutrition, BindingResult bindingResult, @PathVariable("id") Long id){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("foodGroup",FoodGroup.values());
+            return "editError";
+        }
+        nutritionService.update(nutrition);
+        model.addAttribute("nutrition",nutritionService.find(id));
+        return "view";
+    }
+
+    @GetMapping("/nutrition/delete/{id}")
+    public String delete(Model model, @PathVariable("id") Long id){
+        nutritionService.delete(id);
+        model.addAttribute("nutritionList",nutritionService.findAll());
+        return "redirect:/nutritions";
+    }
 }
