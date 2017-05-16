@@ -3,6 +3,8 @@ package com.example.controller;
 import com.example.common.FoodGroup;
 import com.example.domain.Nutrition;
 import com.example.service.NutritionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +12,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.jws.WebParam;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +26,8 @@ import java.util.List;
 
 @Controller
 public class NutritionController {
+
+    private static final Logger logger = LoggerFactory.getLogger(NutritionController.class);
 
     @Autowired
     NutritionService nutritionService;
@@ -86,5 +94,22 @@ public class NutritionController {
         nutritionService.delete(id);
         model.addAttribute("nutritionList",nutritionService.findAll());
         return "redirect:/nutritions";
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public String handleGeneralException(Model model, final Exception exception, final HttpServletRequest request, final HttpServletResponse response){
+        System.out.println("!!!\nabout to log");
+        logger.warn(exception.getMessage() + "\n" + stackTraceAsString(exception));
+        System.out.println("!!!\nafter log");
+        model.addAttribute("message", exception.getMessage());
+        System.out.println("!!!\nafter model add attribute");
+        return "errorPage";
+    }
+
+    private String stackTraceAsString(Exception exception) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        return sw.toString();
     }
 }
