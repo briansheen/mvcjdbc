@@ -25,9 +25,9 @@ public class Nutrition {
     @NotNull
     private int carbs;
 
-    @NotNull
     private FoodGroup group;
 
+    private Boolean favorite;
 
     public long getId() {
         return id;
@@ -69,6 +69,14 @@ public class Nutrition {
         this.group = group;
     }
 
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,18 +84,22 @@ public class Nutrition {
 
         Nutrition nutrition = (Nutrition) o;
 
+        if (id != nutrition.id) return false;
         if (calories != nutrition.calories) return false;
         if (carbs != nutrition.carbs) return false;
         if (product != null ? !product.equals(nutrition.product) : nutrition.product != null) return false;
-        return group == nutrition.group;
+        if (group != nutrition.group) return false;
+        return favorite != null ? favorite.equals(nutrition.favorite) : nutrition.favorite == null;
     }
 
     @Override
     public int hashCode() {
-        int result = product != null ? product.hashCode() : 0;
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (product != null ? product.hashCode() : 0);
         result = 31 * result + calories;
         result = 31 * result + carbs;
         result = 31 * result + (group != null ? group.hashCode() : 0);
+        result = 31 * result + (favorite != null ? favorite.hashCode() : 0);
         return result;
     }
 
@@ -99,6 +111,7 @@ public class Nutrition {
                 ", calories=" + calories +
                 ", carbs=" + carbs +
                 ", group=" + group +
+                ", favorite=" + favorite +
                 '}';
     }
 }

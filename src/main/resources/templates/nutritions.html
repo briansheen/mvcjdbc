@@ -16,25 +16,29 @@
         <table class="table table-bordered table-hover">
             <thead class="thead-inverse">
             <tr>
+                <th></th>
                 <th>id</th>
                 <th>product</th>
                 <th>carbs</th>
                 <th>calories</th>
                 <th>foodgroup</th>
+                <th>favorite</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="nutrition : ${nutritionList}">
+                <td><input type="checkbox" name="deleteMe" th:value="${nutrition.id}"/></td>
                 <td><a th:text="${nutrition.id}" th:href="@{'/nutrition/'+${nutrition.id}}"></a></td>
                 <td th:text="${nutrition.product}"></td>
                 <td th:text="${nutrition.carbs}"></td>
                 <td th:text="${nutrition.calories}"></td>
-                <td th:text="${nutrition.group.name()}"></td>
+                <td th:text="${nutrition.group}"></td>
+                <td th:text="${nutrition.favorite}"></td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p class="text-center"><a href="/nutrition"><input type="button" value="Add Nutrition"/></a></p>
+    <p class="text-center"><a href="/nutrition"><input type="button" value="Add Nutrition"/></a> <input type="submit" value="Delete Checked Nutritions" onclick="return confirm('Are you sure you want to delete selected nutritions?');"/> </p>
 </form>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"

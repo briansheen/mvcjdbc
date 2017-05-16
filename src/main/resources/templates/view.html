@@ -32,11 +32,15 @@
             </tr>
             <tr>
                 <td class="table-inverse">Food Group:</td>
-                <td th:text="${nutrition.group.name()}"></td>
+                <td th:text="${nutrition.group}"></td>
+            </tr>
+            <tr>
+                <td class="table-inverse">Favorite:</td>
+                <td th:text="${nutrition.favorite}"></td>
             </tr>
         </table>
     </div>
-    <p><a href="/nutritions"><input type="button" value="Back to Nutrition Table"/></a> <a th:href="'/nutrition/edit/'+${nutrition.id}"><input type="button" value="Edit"/></a></p>
+    <p><a href="/nutritions"><input type="button" value="Back to Nutrition Table"/></a> <a th:href="'/nutrition/edit/'+${nutrition.id}"><input type="button" value="Edit"/></a> <a th:href="'/nutrition/delete/'+${nutrition.id}" onclick="return confirm('Are you sure you want to delete nutrition?');"><input type="button" value="Delete"/></a></p>
 </form>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"

@@ -40,8 +40,21 @@
                 <td>
                     <div class="form-group">
                         <select class="form-control" th:field="*{group}">
+                            <option value=""></option>
                             <option th:each="group:${foodGroup}" th:value="${group}"
                                     th:text="${group}"></option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Favorite:</td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{favorite}">
+                            <option value=""></option>
+                            <option value="1">True</option>
+                            <option value="0">False</option>
                         </select>
                     </div>
                 </td>

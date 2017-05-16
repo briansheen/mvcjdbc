@@ -20,8 +20,8 @@ public class NutritionServiceImpl implements NutritionService {
 
     @Override
     @Transactional
-    public void add(Nutrition nutrition) {
-        nutritionDao.add(nutrition);
+    public int add(Nutrition nutrition) {
+        return nutritionDao.add(nutrition);
     }
 
     @Override

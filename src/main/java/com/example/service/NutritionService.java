@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface NutritionService {
 
-    void add(Nutrition nutrition);
+    int add(Nutrition nutrition);
 
     List<Nutrition> findAll();
 

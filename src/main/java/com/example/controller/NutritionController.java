@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.jws.WebParam;
 import javax.validation.Valid;
@@ -30,6 +27,15 @@ public class NutritionController {
     @GetMapping("/nutritions")
     public String allNutritions(Model model) {
         model.addAttribute("nutritionList", nutritionService.findAll());
+        return "nutritions";
+    }
+
+    @PostMapping("/nutritions")
+    public String deleteNutritions(Model model, @RequestParam(value="deleteMe", required = true) List<Long> nutritionIds){
+        for(Long nId:nutritionIds){
+            nutritionService.delete(nId);
+        }
+        model.addAttribute("nutritionList",nutritionService.findAll());
         return "nutritions";
     }
 
