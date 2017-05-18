@@ -89,8 +89,9 @@ public class NutritionController {
         return "view";
     }
 
-    @GetMapping("/nutrition/delete/{id}")
+    @PostMapping("/nutrition/delete/{id}")
     public String delete(Model model, @PathVariable("id") Long id){
+        System.out.println("!!!!\n in deletenutritionsmethod");
         nutritionService.delete(id);
         model.addAttribute("nutritionList",nutritionService.findAll());
         return "redirect:/nutritions";
