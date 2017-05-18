@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -73,9 +74,10 @@ public class NutritionDaoImpl implements NutritionDao {
     }
 
     @Override
+    @Transactional
     public void add(List<Nutrition> nutritions) {
         for (Nutrition nutrition : nutritions) {
-            jdbcTemplate.update("INSERT INTO nutrition (product, calories, carbs, foodgroup) VALUES (?,?,?,?)", nutrition.getProduct(), nutrition.getCalories(), nutrition.getCarbs(), nutrition.getGroup().name());
+            add(nutrition);
         }
     }
 
@@ -106,7 +108,9 @@ public class NutritionDaoImpl implements NutritionDao {
                 }
             }, keyHolder);
         }
-        return (int) keyHolder.getKey().longValue();
+        int id = (int) keyHolder.getKey().longValue();
+        nutrition.setId(id);
+        return id;
     }
 
     @Override

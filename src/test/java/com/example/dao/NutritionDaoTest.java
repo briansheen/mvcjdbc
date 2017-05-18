@@ -10,9 +10,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.domain.Nutrition;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,73 +26,44 @@ public class NutritionDaoTest {
     NutritionDao nutritionDao;
 
     @Test
+    @Transactional
     public void testCreate() {
         Nutrition nutrition = createRandomNutrition();
         nutritionDao.add(nutrition);
-
-        List<Nutrition> nutritions = nutritionDao.findAll();
-
-        Assert.assertNotNull(nutritions);
-        Assert.assertTrue(nutritions.size() > 0);
-
-        boolean found = false;
-        found = findNutrition(nutritions, nutrition, found);
-
-        Assert.assertTrue("Could not find " + nutrition, found);
+        Assert.assertNotNull(nutritionDao.find(nutrition.getId()));
     }
 
     @Test
+    @Transactional
     public void testUpdate() {
         Nutrition nutrition = createRandomNutrition();
         nutritionDao.add(nutrition);
 
-        List<Nutrition> nutritions = nutritionDao.findAll();
+        Nutrition nutritionFromFind = nutritionDao.find(nutrition.getId());
+        Assert.assertEquals(nutrition, nutritionFromFind);
 
-        Nutrition foundNut = null;
-        foundNut = findNutrition(nutritions, nutrition);
-
-        Assert.assertNotNull(foundNut);
-        Assert.assertTrue(foundNut.getId() > 0);
-
-        Nutrition nutritionFromFind = nutritionDao.find(foundNut.getId());
-        Assert.assertEquals(foundNut, nutritionFromFind);
-
-        Nutrition nutritionToUpdate = updateNutritionRandom(foundNut.getId());
-
+        Nutrition nutritionToUpdate = updateNutritionRandom(nutrition.getId());
         nutritionDao.update(nutritionToUpdate);
-        Nutrition nutritionAfterUpdate = nutritionDao.find(nutritionToUpdate.getId());
 
-        Assert.assertEquals(nutritionToUpdate, nutritionAfterUpdate);
+        nutritionFromFind = nutritionDao.find(nutrition.getId());
+        Assert.assertEquals(nutritionToUpdate, nutritionFromFind);
     }
 
     @Test
+    @Transactional
     public void testDelete() {
         Nutrition nutrition = createRandomNutrition();
         nutritionDao.add(nutrition);
 
-        List<Nutrition> nutritions = nutritionDao.findAll();
-
-        Nutrition foundNut = null;
-        foundNut = findNutrition(nutritions, nutrition);
-
-        Assert.assertNotNull(foundNut);
-        Assert.assertTrue(foundNut.getId() > 0);
-
-        nutritionDao.delete(foundNut.getId());
-
-        boolean notFound = false;
-        nutritions = nutritionDao.findAll();
-        notFound = findNutrition(nutritions, foundNut, notFound);
-
-        Assert.assertFalse(notFound);
-
-        Assert.assertNull(nutritionDao.find(foundNut.getId()));
+        nutritionDao.delete(nutrition.getId());
+        Assert.assertNull(nutritionDao.find(nutrition.getId()));
     }
 
     @Test
-    public void testAdd() {
+    public void testCannotAdd() {
         Nutrition nutrition1 = createRandomNutrition();
         Nutrition nutrition2 = createRandomNutrition();
+        nutrition2.setProduct("01234567890123456789012345678901234567890");
 
         Assert.assertNotEquals(nutrition1, nutrition2);
 
@@ -101,17 +74,38 @@ public class NutritionDaoTest {
 
         Assert.assertNotNull(nutritionList);
 
+        try {
+            nutritionDao.add(nutritionList);
+            Assert.fail("should not be able to add product string longer than 40 chars");
+        } catch (DataIntegrityViolationException e) {
+            Assert.assertTrue(true);
+        }
+
+        for(Nutrition nut: nutritionList) {
+            Assert.assertNull(nutritionDao.find(nut.getId()));
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testAddMultiple() {
+        Nutrition nutrition1 = createRandomNutrition();
+        Nutrition nutrition2 = createRandomNutrition();
+
+        Assert.assertNotEquals(nutrition1,nutrition2);
+
+        List<Nutrition> nutritionList = new ArrayList<>();
+        nutritionList.add(nutrition1);
+        nutritionList.add(nutrition2);
+
+        Assert.assertNotNull(nutritionList);
+        Assert.assertTrue(nutritionList.size() > 0);
+
         nutritionDao.add(nutritionList);
 
-        List<Nutrition> nutritions = nutritionDao.findAll();
-
-        Nutrition foundNut1 = findNutrition(nutritions, nutrition1);
-        Nutrition afterFindNut1 = nutritionDao.find(foundNut1.getId());
-        Assert.assertEquals(foundNut1, afterFindNut1);
-
-        Nutrition foundNut2 = findNutrition(nutritions, nutrition2);
-        Nutrition afterFindNut2 = nutritionDao.find(foundNut2.getId());
-        Assert.assertEquals(foundNut2, afterFindNut2);
+        for(Nutrition nut : nutritionList){
+            Assert.assertNotNull(nutritionDao.find(nut.getId()));
+        }
     }
 
     private Nutrition createRandomNutrition() {
@@ -126,7 +120,19 @@ public class NutritionDaoTest {
         int carbs = random.nextInt(3000);
         nutrition.setCarbs(carbs);
 
-        nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
+        int group = random.nextInt(6);
+        if (group == 0) {
+            nutrition.setGroup(null);
+        } else {
+            nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
+        }
+
+        int bool = random.nextInt(3);
+        if (bool == 0) {
+            nutrition.setFavorite(null);
+        } else {
+            nutrition.setFavorite(random.nextBoolean());
+        }
 
         return nutrition;
     }
@@ -136,30 +142,20 @@ public class NutritionDaoTest {
         nutrition.setProduct(Integer.toString(random.nextInt(3000)));
         nutrition.setCalories(random.nextInt(3000));
         nutrition.setCarbs(random.nextInt(3000));
-        nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
+        int group = random.nextInt(6);
+        if (group == 0) {
+            nutrition.setGroup(null);
+        } else {
+            nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
+        }
+
+        int bool = random.nextInt(3);
+        if (bool == 0) {
+            nutrition.setFavorite(null);
+        } else {
+            nutrition.setFavorite(random.nextBoolean());
+        }
         nutrition.setId(id);
         return nutrition;
     }
-
-    private Nutrition findNutrition(List<Nutrition> nutritions, Nutrition nutrition) {
-        for (Nutrition nut : nutritions) {
-            if (nut.equals(nutrition)) {
-                nutrition = nut;
-                break;
-            }
-        }
-        return nutrition;
-    }
-
-    private boolean findNutrition(List<Nutrition> nutritions, Nutrition nutrition, boolean found) {
-        for (Nutrition nut : nutritions) {
-            if (nut.equals(nutrition)) {
-                found = true;
-                break;
-            }
-        }
-        return found;
-    }
-
-
 }

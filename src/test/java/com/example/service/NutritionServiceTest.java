@@ -5,16 +5,21 @@ import java.util.List;
 import java.util.Random;
 
 import com.example.common.FoodGroup;
+import com.example.dao.NutritionDao;
 import com.example.service.NutritionService;
+import groovy.transform.TailRecursive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.domain.Nutrition;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -22,52 +27,34 @@ public class NutritionServiceTest {
 
     Random random = new Random();
 
+    @MockBean
+    NutritionDao nutritionDao;
+
     @Autowired
     NutritionService nutritionService;
 
     @Test
+    @Transactional
     public void testCreate() {
         Nutrition nutrition = createRandomNutrition();
         nutritionService.add(nutrition);
-
-        List<Nutrition> nutritions = nutritionService.findAll();
-
-        Assert.assertNotNull(nutritions);
-        Assert.assertTrue(nutritions.size() > 0);
-
-        boolean found = false;
-        found = findNutrition(nutritions, nutrition, found);
-
-        Assert.assertTrue("Could not find " + nutrition, found);
+        Assert.assertNotNull(nutritionService.find(nutrition.getId()));
     }
 
     @Test
+    @Transactional
     public void testUpdate() {
         Nutrition nutrition = createRandomNutrition();
         nutritionService.add(nutrition);
 
-        List<Nutrition> nutritions = nutritionService.findAll();
+        Nutrition nutritionFromFind = nutritionService.find(nutrition.getId());
+        Assert.assertEquals(nutrition, nutritionFromFind);
 
-        Nutrition foundNut = null;
-        foundNut = findNutrition(nutritions, nutrition);
+        Nutrition nutritionToUpdate = updateNutritionRandom(nutrition.getId());
+        nutritionService.update(nutritionToUpdate);
 
-        Assert.assertNotNull(foundNut);
-        Assert.assertTrue(foundNut.getId() > 0);
-
-        Nutrition nutritionFromFind = nutritionService.find(foundNut.getId());
-        Assert.assertEquals(foundNut, nutritionFromFind);
-
-        Nutrition nutritionToUpdate = updateNutritionRandom(foundNut.getId());
-        nutritionToUpdate.setProduct(null);
-        try {
-            nutritionService.update(nutritionToUpdate);
-            Assert.fail("Should not be able to add a nutrition with null product");
-        } catch (DataIntegrityViolationException e) {
-            Assert.assertTrue(true);
-        }
-
-        nutritionFromFind = nutritionService.find(foundNut.getId());
-        Assert.assertEquals(foundNut, nutritionFromFind);
+        nutritionFromFind = nutritionService.find(nutrition.getId());
+        Assert.assertEquals(nutritionToUpdate, nutritionFromFind);
     }
 
     @Test
@@ -75,25 +62,12 @@ public class NutritionServiceTest {
         Nutrition nutrition = createRandomNutrition();
         nutritionService.add(nutrition);
 
-        List<Nutrition> nutritions = nutritionService.findAll();
-
-        Nutrition foundNut = null;
-        foundNut = findNutrition(nutritions, nutrition);
-
-        Assert.assertNotNull(foundNut);
-        Assert.assertTrue(foundNut.getId() > 0);
-
-        nutritionService.delete(foundNut.getId());
-
-        boolean notFound = false;
-        nutritions = nutritionService.findAll();
-        notFound = findNutrition(nutritions, foundNut, notFound);
-
-        Assert.assertFalse(notFound);
+        nutritionService.delete(nutrition.getId());
+        Assert.assertNull(nutritionService.find(nutrition.getId()));
     }
 
     @Test
-    public void testAdd() {
+    public void testCannotAdd() {
         Nutrition nutrition1 = createRandomNutrition();
         Nutrition nutrition2 = createRandomNutrition();
         nutrition2.setProduct("01234567890123456789012345678901234567890");
@@ -114,16 +88,48 @@ public class NutritionServiceTest {
             Assert.assertTrue(true);
         }
 
-        List<Nutrition> nutritions = nutritionService.findAll();
+        for(Nutrition nut: nutritionList) {
+            Assert.assertNull(nutritionService.find(nut.getId()));
+        }
+    }
 
-        boolean foundNut1 = false;
-        foundNut1 = findNutrition(nutritions, nutrition1, foundNut1);
+    @Test
+    @Transactional
+    public void testAddMultiple() {
+        Nutrition nutrition1 = createRandomNutrition();
+        Nutrition nutrition2 = createRandomNutrition();
 
-        boolean foundNut2 = false;
-        foundNut2 = findNutrition(nutritions, nutrition2, foundNut2);
+        Assert.assertNotEquals(nutrition1,nutrition2);
 
-        Assert.assertFalse("Should not have found nutrition1", foundNut1);
-        Assert.assertFalse("Should not have found nutrition2", foundNut2);
+        List<Nutrition> nutritionList = new ArrayList<>();
+        nutritionList.add(nutrition1);
+        nutritionList.add(nutrition2);
+
+        Assert.assertNotNull(nutritionList);
+        Assert.assertTrue(nutritionList.size() > 0);
+
+        nutritionService.add(nutritionList);
+
+        for(Nutrition nut : nutritionList){
+            Assert.assertNotNull(nutritionService.find(nut.getId()));
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testMockFind(){
+        Nutrition nutrition = new Nutrition();
+        nutrition.setId(226);
+        nutrition.setGroup(FoodGroup.PROTEIN);
+        nutrition.setProduct("meat test");
+
+        org.mockito.BDDMockito.given(nutritionDao.find(226)).willReturn(nutrition);
+
+        Nutrition nutritionReturn = nutritionService.find(227);
+        Assert.assertNull(nutritionReturn);
+
+        nutritionReturn = nutritionService.find(226);
+        Assert.assertEquals(nutrition,nutritionReturn);
     }
 
     private Nutrition createRandomNutrition() {
@@ -138,7 +144,19 @@ public class NutritionServiceTest {
         int carbs = random.nextInt(3000);
         nutrition.setCarbs(carbs);
 
-        nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
+        int group = random.nextInt(6);
+        if (group == 0) {
+            nutrition.setGroup(null);
+        } else {
+            nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
+        }
+
+        int bool = random.nextInt(3);
+        if (bool == 0) {
+            nutrition.setFavorite(null);
+        } else {
+            nutrition.setFavorite(random.nextBoolean());
+        }
 
         return nutrition;
     }
@@ -148,29 +166,20 @@ public class NutritionServiceTest {
         nutrition.setProduct(Integer.toString(random.nextInt(3000)));
         nutrition.setCalories(random.nextInt(3000));
         nutrition.setCarbs(random.nextInt(3000));
-        nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
+        int group = random.nextInt(6);
+        if (group == 0) {
+            nutrition.setGroup(null);
+        } else {
+            nutrition.setGroup(FoodGroup.values()[random.nextInt(FoodGroup.values().length)]);
+        }
+
+        int bool = random.nextInt(3);
+        if (bool == 0) {
+            nutrition.setFavorite(null);
+        } else {
+            nutrition.setFavorite(random.nextBoolean());
+        }
         nutrition.setId(id);
         return nutrition;
     }
-
-    private Nutrition findNutrition(List<Nutrition> nutritions, Nutrition nutrition) {
-        for (Nutrition nut : nutritions) {
-            if (nut.equals(nutrition)) {
-                nutrition = nut;
-                break;
-            }
-        }
-        return nutrition;
-    }
-
-    private boolean findNutrition(List<Nutrition> nutritions, Nutrition nutrition, boolean found) {
-        for (Nutrition nut : nutritions) {
-            if (nut.equals(nutrition)) {
-                found = true;
-                break;
-            }
-        }
-        return found;
-    }
-
 }

@@ -98,11 +98,8 @@ public class NutritionController {
 
     @ExceptionHandler(value = Exception.class)
     public String handleGeneralException(Model model, final Exception exception, final HttpServletRequest request, final HttpServletResponse response){
-        System.out.println("!!!\nabout to log");
         logger.warn(exception.getMessage() + "\n" + stackTraceAsString(exception));
-        System.out.println("!!!\nafter log");
         model.addAttribute("message", exception.getMessage());
-        System.out.println("!!!\nafter model add attribute");
         return "errorPage";
     }
 
