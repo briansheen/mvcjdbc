@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -9,25 +9,28 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
 </head>
-<body>
+<body style="padding:60px">
 <h1 class="display-3 text-center">Nutrition Table</h1>
+<nav class ="navbar fixed-top navbar-light bg-faded">
+    <div class="navbar-brand"><form class="form-inline" action="#" th:action="@{/logout}" method="post"><div th:inLine="text">Hello, [[${#httpServletRequest.remoteUser}]]&nbsp;&nbsp;</div><a href="/"><input type="submit" value="Sign Out"/></a></form></div>
+</nav>
 <form action="#" th:action="@{/nutritions}" th:object="${nutritionList}" method="post">
     <div class="container mx-auto" style="width: 900px;">
         <table class="table table-bordered table-hover">
             <thead class="thead-inverse">
             <tr>
-                <th></th>
-                <th>id</th>
-                <th>product</th>
-                <th>carbs</th>
-                <th>calories</th>
-                <th>foodgroup</th>
-                <th>favorite</th>
+                <th sec:authorize="hasRole('ADMIN')"></th>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Carbs</th>
+                <th>Calories</th>
+                <th>Food Group</th>
+                <th>Favorite</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="nutrition : ${nutritionList}">
-                <td><input type="checkbox" name="deleteMe" th:value="${nutrition.id}"/></td>
+                <td sec:authorize="hasRole('ADMIN')"><input type="checkbox" name="deleteMe" th:value="${nutrition.id}"/></td>
                 <td><a th:text="${nutrition.id}" th:href="@{'/nutrition/'+${nutrition.id}}"></a></td>
                 <td th:text="${nutrition.product}"></td>
                 <td th:text="${nutrition.carbs}"></td>
@@ -38,7 +41,7 @@
             </tbody>
         </table>
     </div>
-    <p class="text-center"><a href="/nutrition"><input type="button" value="Add Nutrition"/></a> <input type="submit" value="Delete Checked Nutritions" onclick="return confirm('Are you sure you want to delete selected nutritions?');"/> </p>
+    <p class="text-center"><a href="/nutrition"><input type="button" value="Add Nutrition"/></a> <input sec:authorize="hasRole('ADMIN')" type="submit" value="Delete Checked Nutritions" onclick="return confirm('Are you sure you want to delete selected nutritions?');"/> </p>
 </form>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"

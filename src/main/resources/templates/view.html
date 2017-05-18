@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -15,32 +15,32 @@
     <div class="container mx-auto" style="width: 400px;">
         <table class="table table-bordered table-hover">
             <tr>
-                <td class="table-inverse">ID:</td>
+                <td class="table-inverse">ID</td>
                 <td th:text="${nutrition.id}"></td>
             </tr>
             <tr>
-                <td class="table-inverse">Product:</td>
+                <td class="table-inverse">Product</td>
                 <td th:text="${nutrition.product}"></td>
             </tr>
             <tr>
-                <td class="table-inverse">Carbs:</td>
+                <td class="table-inverse">Carbs</td>
                 <td th:text="${nutrition.carbs}"></td>
             </tr>
             <tr>
-                <td class="table-inverse">Calories:</td>
+                <td class="table-inverse">Calories</td>
                 <td th:text="${nutrition.calories}"></td>
             </tr>
             <tr>
-                <td class="table-inverse">Food Group:</td>
+                <td class="table-inverse">Food Group</td>
                 <td th:text="${nutrition.group}"></td>
             </tr>
             <tr>
-                <td class="table-inverse">Favorite:</td>
+                <td class="table-inverse">Favorite</td>
                 <td th:text="${nutrition.favorite}"></td>
             </tr>
         </table>
     </div>
-    <p><a href="/nutritions"><input type="button" value="Back to Nutrition Table"/></a> <a th:href="'/nutrition/edit/'+${nutrition.id}"><input type="button" value="Edit"/></a> <a th:href="'/nutrition/delete/'+${nutrition.id}" onclick="return confirm('Are you sure you want to delete nutrition?');"><input type="button" value="Delete"/></a></p>
+    <p><a href="/nutritions"><input type="button" value="Back to Nutrition Table"/></a> <a th:href="'/nutrition/edit/'+${nutrition.id}"><input type="button" value="Edit"/></a> <a sec:authorize="hasRole('ADMIN')" th:href="'/nutrition/delete/'+${nutrition.id}" onclick="return confirm('Are you sure you want to delete nutrition?');"><input type="button" value="Delete"/></a></p>
 </form>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"

@@ -16,11 +16,11 @@
     <div class="container mx-auto" style="width: 600px;">
         <table class="table table-bordered table-hover">
             <tr>
-                <td class="table-inverse">ID:</td>
+                <td class="table-inverse">ID</td>
                 <td th:text="${nutrition.id}"></td>
             </tr>
             <tr>
-                <td class="table-inverse">Product:</td>
+                <td class="table-inverse">Product</td>
                 <td><input type="text" th:field="*{product}"/></td>
                 <td th:if="${#fields.hasErrors('product')}" th:errors="*{product}" class="alert alert-warning"
                     role="alert">
@@ -28,21 +28,21 @@
                 </td>
             </tr>
             <tr>
-                <td class="table-inverse">Carbs:</td>
+                <td class="table-inverse">Carbs</td>
                 <td><input type="text" th:field="*{carbs}"/></td>
                 <td th:if="${#fields.hasErrors('carbs')}" th:errors="*{carbs}" class="alert alert-warning" role="alert">
                     Carb Error
                 </td>
             </tr>
             <tr>
-                <td class="table-inverse">Calories:</td>
+                <td class="table-inverse">Calories</td>
                 <td><input type="text" th:field="*{calories}"/></td>
                 <td th:if="${#fields.hasErrors('calories')}" th:errors="*{calories}" class="alert alert-warning"
                     role="alert">Calorie Error
                 </td>
             </tr>
             <tr>
-                <td class="table-inverse">Food Group:</td>
+                <td class="table-inverse">Food Group</td>
                 <td>
                     <div class="form-group">
                         <select class="form-control" th:field="*{group}">
@@ -54,7 +54,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="table-inverse">Favorite:</td>
+                <td class="table-inverse">Favorite</td>
                 <td>
                     <div class="form-group">
                         <select class="form-control" th:field="*{favorite}">

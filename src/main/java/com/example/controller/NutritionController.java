@@ -103,6 +103,11 @@ public class NutritionController {
         return "errorPage";
     }
 
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
     private String stackTraceAsString(Exception exception) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);

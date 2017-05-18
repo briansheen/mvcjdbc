@@ -15,28 +15,28 @@
     <div class="container mx-auto" style="width: 700px;">
         <table class="table">
             <tr>
-                <td>Product:</td>
+                <td>Product</td>
                 <td><input type="text" th:field="*{product}"/></td>
                 <td th:if="${#fields.hasErrors('product')}" th:errors="*{product}" class="alert alert-warning"
                     role="alert">Product Error
                 </td>
             </tr>
             <tr>
-                <td>Carbs:</td>
+                <td>Carbs</td>
                 <td><input type="text" th:field="*{carbs}"/></td>
                 <td th:if="${#fields.hasErrors('carbs')}" th:errors="*{carbs}" class="alert alert-warning" role="alert">
                     Carb Error
                 </td>
             </tr>
             <tr>
-                <td>Calories:</td>
+                <td>Calories</td>
                 <td><input type="text" th:field="*{calories}"/></td>
                 <td th:if="${#fields.hasErrors('calories')}" th:errors="*{calories}" class="alert alert-warning"
                     role="alert">Calorie Error
                 </td>
             </tr>
             <tr>
-                <td>Food Group:</td>
+                <td>Food Group</td>
                 <td>
                     <div class="form-group">
                         <select class="form-control" th:field="*{group}">
@@ -48,7 +48,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Favorite:</td>
+                <td>Favorite</td>
                 <td>
                     <div class="form-group">
                         <select class="form-control" th:field="*{favorite}">
