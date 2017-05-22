@@ -41,7 +41,7 @@ public class NutritionDaoImpl implements NutritionDao {
         }
     }
 
-    private static final String UPDATE_NUTRITION_SQL = "UPDATE nutrition SET nutrition.product = ?, nutrition.calories = ?, nutrition.carbs = ?, nutrition.foodgroup = ?, nutrition.favorite = ? WHERE nutrition.id = ?";
+    private static final String UPDATE_NUTRITION_SQL = "UPDATE nutrition SET nutrition.product = ?, nutrition.calories = ?, nutrition.carbs = ?, nutrition.foodgroup = ?, nutrition.favorite = ?, nutrition.product_id = ? WHERE nutrition.id = ?";
 
     @Override
     public void update(Nutrition nutrition) {
@@ -62,7 +62,13 @@ public class NutritionDaoImpl implements NutritionDao {
                 } else {
                     ps.setBoolean(5, nutrition.getFavorite());
                 }
-                ps.setLong(6, nutrition.getId());
+                if(nutrition.getProductid() == null){
+                    ps.setNull(6,Types.INTEGER);
+                } else {
+                    ps.setLong(6,nutrition.getProductid());
+                }
+                ps.setLong(7, nutrition.getId());
+
                 return ps;
             }
         });
@@ -81,7 +87,7 @@ public class NutritionDaoImpl implements NutritionDao {
         }
     }
 
-    private static final String ADD_NUTRITION_SQL = "INSERT INTO nutrition (product, calories, carbs, foodgroup, favorite) VALUES (?,?,?,?,?)";
+    private static final String ADD_NUTRITION_SQL = "INSERT INTO nutrition (product, calories, carbs, foodgroup, favorite, product_id) VALUES (?,?,?,?,?,?)";
 
     @Override
     public int add(Nutrition nutrition) {
@@ -103,6 +109,11 @@ public class NutritionDaoImpl implements NutritionDao {
                         ps.setNull(5, Types.BOOLEAN);
                     } else {
                         ps.setBoolean(5, nutrition.getFavorite());
+                    }
+                    if(nutrition.getProductid()== null){
+                        ps.setNull(6,Types.INTEGER);
+                    } else {
+                        ps.setLong(6,nutrition.getProductid());
                     }
                     return ps;
                 }
@@ -132,6 +143,9 @@ public class NutritionDaoImpl implements NutritionDao {
             }
             if (resultSet.getObject("favorite") != null) {
                 nutrition.setFavorite(resultSet.getBoolean("favorite"));
+            }
+            if (resultSet.getObject("product_id") != null) {
+                nutrition.setProductid(resultSet.getLong("product_id"));
             }
             return nutrition;
         }

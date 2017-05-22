@@ -29,6 +29,16 @@ public class Nutrition {
 
     private Boolean favorite;
 
+    private Long productid;
+
+    public Long getProductid() {
+        return productid;
+    }
+
+    public void setProductid(Long productid) {
+        this.productid = productid;
+    }
+
     public long getId() {
         return id;
     }
@@ -89,7 +99,8 @@ public class Nutrition {
         if (carbs != nutrition.carbs) return false;
         if (product != null ? !product.equals(nutrition.product) : nutrition.product != null) return false;
         if (group != nutrition.group) return false;
-        return favorite != null ? favorite.equals(nutrition.favorite) : nutrition.favorite == null;
+        if (favorite != null ? !favorite.equals(nutrition.favorite) : nutrition.favorite != null) return false;
+        return productid != null ? productid.equals(nutrition.productid) : nutrition.productid == null;
     }
 
     @Override
@@ -100,6 +111,7 @@ public class Nutrition {
         result = 31 * result + carbs;
         result = 31 * result + (group != null ? group.hashCode() : 0);
         result = 31 * result + (favorite != null ? favorite.hashCode() : 0);
+        result = 31 * result + (productid != null ? productid.hashCode() : 0);
         return result;
     }
 
@@ -112,6 +124,8 @@ public class Nutrition {
                 ", carbs=" + carbs +
                 ", group=" + group +
                 ", favorite=" + favorite +
+                ", productid=" + productid +
                 '}';
     }
 }
+

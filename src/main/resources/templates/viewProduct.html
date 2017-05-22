@@ -10,42 +10,53 @@
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
 </head>
 <body>
-<h1 class="display-4 text-center">Nutrition View</h1>
-<form class="text-center" action="#" th:action="@{'/nutrition/delete/'+${nutrition.id}}" th:object="${nutrition}" method="post">
+<h1 class="display-4 text-center">Product View</h1>
+<form class="text-center" action="#" th:action="@{'/product/delete/'+${product.id}}" th:object="${product}" method="post">
     <div class="container mx-auto" style="width: 400px;">
         <table class="table table-bordered table-hover">
             <tr>
                 <td class="table-inverse">ID</td>
-                <td th:text="${nutrition.id}"></td>
+                <td th:text="${product.id}"></td>
             </tr>
             <tr>
-                <td class="table-inverse">Product</td>
-                <td th:text="${nutrition.product}"></td>
+                <td class="table-inverse">Name</td>
+                <td th:text="${product.name}"></td>
             </tr>
             <tr>
-                <td class="table-inverse">Carbs</td>
-                <td th:text="${nutrition.carbs}"></td>
-            </tr>
-            <tr>
-                <td class="table-inverse">Calories</td>
-                <td th:text="${nutrition.calories}"></td>
-            </tr>
-            <tr>
-                <td class="table-inverse">Food Group</td>
-                <td th:text="${nutrition.group}"></td>
-            </tr>
-            <tr>
-                <td class="table-inverse">Favorite</td>
-                <td th:text="${nutrition.favorite}"></td>
-            </tr>
-            <tr>
-                <td class="table-inverse">Product ID</td>
-                <td th:text="${nutrition.productid}"></td>
+                <td class="table-inverse">Brand</td>
+                <td th:text="${product.brand}"></td>
             </tr>
         </table>
     </div>
-    <p><a href="/nutritions"><input type="button" value="Back to Nutrition Table"/></a> <a th:href="'/nutrition/edit/'+${nutrition.id}"><input type="button" value="Edit"/></a> <input type="submit" sec:authorize="hasRole('ADMIN')" onclick="return confirm('Are you sure you want to delete nutrition?');" value="Delete"/></p>
+    <p><a href="/products"><input type="button" value="Back to Product Table"/></a> <a th:href="'/product/edit/'+${product.id}"><input type="button" value="Edit"/></a> <input type="submit" sec:authorize="hasRole('ADMIN')" onclick="return confirm('Are you sure you want to delete product?');" value="Delete"/></p>
 </form>
+    <div class="container mx-auto" style="width: 1000px;">
+        <h1 class="display-4 text-center">Nutritions in Product</h1>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-inverse">
+            <tr>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Carbs</th>
+                <th>Calories</th>
+                <th>Food Group</th>
+                <th>Favorite</th>
+                <th>Product ID</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="nutrition : ${productNutritions}">
+                <td th:text="${nutrition.id}"></td>
+                <td th:text="${nutrition.product}"></td>
+                <td th:text="${nutrition.carbs}"></td>
+                <td th:text="${nutrition.calories}"></td>
+                <td th:text="${nutrition.group}"></td>
+                <td th:text="${nutrition.favorite}"></td>
+                <td th:text="${nutrition.productid}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
         crossorigin="anonymous"></script>

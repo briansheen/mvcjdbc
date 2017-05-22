@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.common.FoodGroup;
 import com.example.domain.Nutrition;
 import com.example.service.NutritionService;
+import com.example.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class NutritionController {
     @Autowired
     NutritionService nutritionService;
 
+    @Autowired
+    ProductService productService;
+
     @GetMapping("/nutritions")
     public String allNutritions(Model model) {
         model.addAttribute("nutritionList", nutritionService.findAll());
@@ -51,6 +55,7 @@ public class NutritionController {
     public String addNutrition(Model model) {
         model.addAttribute("nutrition", new Nutrition());
         model.addAttribute("foodGroup", FoodGroup.values());
+        model.addAttribute("productList",productService.findAllIds());
         return "nutrition";
     }
 
@@ -58,6 +63,7 @@ public class NutritionController {
     public String nutritionSubmit(Model model, @Valid Nutrition nutrition, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             model.addAttribute("foodGroup", FoodGroup.values());
+            model.addAttribute("productList",productService.findAllIds());
             return "nutritionError";
         }
         nutritionService.add(nutrition);
@@ -74,7 +80,9 @@ public class NutritionController {
     @GetMapping("nutrition/edit/{id}")
     public String edit(Model model, @PathVariable("id") Long id){
         model.addAttribute("nutrition",nutritionService.find(id));
+        System.out.println("!!!\n"+nutritionService.find(id));
         model.addAttribute("foodGroup", FoodGroup.values());
+        model.addAttribute("productList",productService.findAllIds());
         return "edit";
     }
 
@@ -82,8 +90,11 @@ public class NutritionController {
     public String editSubmit(Model model, @Valid Nutrition nutrition, BindingResult bindingResult, @PathVariable("id") Long id){
         if(bindingResult.hasErrors()){
             model.addAttribute("foodGroup",FoodGroup.values());
+            model.addAttribute("productList",productService.findAllIds());
             return "editError";
         }
+        System.out.println("!!!!\n"+nutrition.getId());
+        System.out.println("!!!!\n"+id);
         nutritionService.update(nutrition);
         model.addAttribute("nutrition",nutritionService.find(id));
         return "view";

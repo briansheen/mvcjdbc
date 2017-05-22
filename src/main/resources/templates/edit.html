@@ -55,6 +55,18 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td class="table-inverse">Product ID</td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{productid}">
+                            <option value=""></option>
+                            <option th:each="productid:${productList}" th:value="${productid}"
+                                    th:text="${productid}"></option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
         </table>
     </div>
     <p><input type="submit" value="Save"/> <a th:href="'/nutrition/'+${nutrition.id}"><input type="button"

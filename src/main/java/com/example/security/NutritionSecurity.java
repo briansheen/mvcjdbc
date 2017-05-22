@@ -27,6 +27,7 @@ public class NutritionSecurity extends WebSecurityConfigurerAdapter{
                 authorizeRequests().
                 antMatchers("/").permitAll().
                 antMatchers("/nutrition/delete/**").access("hasRole('ADMIN')").
+                antMatchers("/product/delete/**").access("hasRole('ADMIN')").
                 anyRequest().
                 authenticated().
                 and().

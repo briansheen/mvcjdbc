@@ -10,40 +10,32 @@
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
 </head>
 <body style="padding:60px">
-<h1 class="display-3 text-center">Nutrition Table</h1>
+<h1 class="display-3 text-center">Product Table</h1>
 <nav class ="navbar fixed-top navbar-light bg-faded">
     <div class="navbar-brand"><form class="form-inline" action="#" th:action="@{/logout}" method="post"><div th:inLine="text">Hello, [[${#httpServletRequest.remoteUser}]]&nbsp;&nbsp;</div><a href="/"><input type="submit" value="Sign Out"/></a><a href="/">&nbsp;&nbsp;<input type="button" value="Home"/></a></form></div>
 </nav>
-<form action="#" th:action="@{/nutritions}" th:object="${nutritionList}" method="post">
-    <div class="container mx-auto" style="width: 900px;">
+<form action="#" th:action="@{/products}" th:object="${productList}" method="post">
+    <div class="container mx-auto" style="width: 500px;">
         <table class="table table-bordered table-hover">
             <thead class="thead-inverse">
             <tr>
                 <th sec:authorize="hasRole('ADMIN')"></th>
                 <th>ID</th>
-                <th>Product</th>
-                <th>Carbs</th>
-                <th>Calories</th>
-                <th>Food Group</th>
-                <th>Favorite</th>
-                <th>Product ID</th>
+                <th>Name</th>
+                <th>Brand</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="nutrition : ${nutritionList}">
-                <td sec:authorize="hasRole('ADMIN')"><input type="checkbox" name="deleteMe" th:value="${nutrition.id}"/></td>
-                <td><a th:text="${nutrition.id}" th:href="@{'/nutrition/'+${nutrition.id}}"></a></td>
-                <td th:text="${nutrition.product}"></td>
-                <td th:text="${nutrition.carbs}"></td>
-                <td th:text="${nutrition.calories}"></td>
-                <td th:text="${nutrition.group}"></td>
-                <td th:text="${nutrition.favorite}"></td>
-                <td th:text="${nutrition.productid}"></td>
+            <tr th:each="product : ${productList}">
+                <td sec:authorize="hasRole('ADMIN')"><input type="checkbox" name="deleteMe" th:value="${product.id}"/></td>
+                <td><a th:text="${product.id}" th:href="@{'/product/'+${product.id}}"></a></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.brand}"></td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p class="text-center"><a href="/nutrition"><input type="button" value="Add Nutrition"/></a> <input sec:authorize="hasRole('ADMIN')" type="submit" value="Delete Checked Nutritions" onclick="return confirm('Are you sure you want to delete selected nutritions?');"/> </p>
+    <p class="text-center"><a href="/product"><input type="button" value="Add Product"/></a> <input sec:authorize="hasRole('ADMIN')" type="submit" value="Delete Checked Products" onclick="return confirm('Are you sure you want to delete selected products?');"/> </p>
 </form>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"

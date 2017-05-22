@@ -132,7 +132,7 @@ public class NutritionServiceTest {
         Assert.assertEquals(nutrition,nutritionReturn);
     }
 
-    private Nutrition createRandomNutrition() {
+    protected Nutrition createRandomNutrition() {
         Nutrition nutrition = new Nutrition();
 
         String product = Integer.toString(random.nextInt(3000));
@@ -161,7 +161,7 @@ public class NutritionServiceTest {
         return nutrition;
     }
 
-    private Nutrition updateNutritionRandom(long id) {
+    protected Nutrition updateNutritionRandom(long id) {
         Nutrition nutrition = new Nutrition();
         nutrition.setProduct(Integer.toString(random.nextInt(3000)));
         nutrition.setCalories(random.nextInt(3000));

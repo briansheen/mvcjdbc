@@ -59,6 +59,18 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td>Product ID</td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{productid}">
+                            <option value=""></option>
+                            <option th:each="productid:${productList}" th:value="${productid}"
+                                    th:text="${productid}"></option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
         </table>
     </div>
     <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/> <a href="/nutritions"><input type="button" value="Cancel"/></a></p>
