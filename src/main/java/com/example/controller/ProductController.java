@@ -95,8 +95,6 @@ public class ProductController {
         if(bindingResult.hasErrors()){
             return "editProductError";
         }
-        System.out.println("!!!!\n"+product.getId());
-        System.out.println("!!!!\n"+product_id);
         productService.updateProduct(product);
         model.addAttribute("product", productService.find(product_id));
         model.addAttribute("productNutritions", productService.findNutritionsWithProduct(product_id));

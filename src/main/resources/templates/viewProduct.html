@@ -28,9 +28,9 @@
             </tr>
         </table>
     </div>
-    <p><a href="/products"><input type="button" value="Back to Product Table"/></a> <a th:href="'/product/edit/'+${product.id}"><input type="button" value="Edit"/></a> <input type="submit" sec:authorize="hasRole('ADMIN')" onclick="return confirm('Are you sure you want to delete product?');" value="Delete"/></p>
+    <p><a href="/products"><input type="button" value="Back to Products Table"/></a> <a th:href="'/product/edit/'+${product.id}"><input type="button" value="Edit"/></a> <input type="submit" sec:authorize="hasRole('ADMIN')" onclick="return confirm('Are you sure you want to delete product?');" value="Delete"/></p>
 </form>
-    <div class="container mx-auto" style="width: 1000px;">
+    <div class="container mx-auto" style="width: 1200px;">
         <h1 class="display-4 text-center">Nutritions in Product</h1>
         <table class="table table-bordered table-hover">
             <thead class="thead-inverse">
@@ -53,10 +53,13 @@
                 <td th:text="${nutrition.group}"></td>
                 <td th:text="${nutrition.favorite}"></td>
                 <td th:text="${nutrition.productid}"></td>
+                <td class="text-center"><form action="#" th:action="@{'/nutrition/editfromproduct/'+${nutrition.id}}" method="get"><input class="btn btn-primary btn-info" type="submit" value="Edit"/></form></td>
+                <td class="text-center" sec:authorize="hasRole('ADMIN')"><form action="#" th:action="@{'/nutrition/deletefromproduct/'+${nutrition.id}}" method="post"><input class="btn btn-primary btn-danger" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this nutrition?');"/></form></td>
             </tr>
             </tbody>
         </table>
     </div>
+    <p class="text-center"><a th:href="@{'/nutrition/addproduct/'+${product.id}}"><input type="button" value="Add Nutrition"/></a></p>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
         crossorigin="anonymous"></script>

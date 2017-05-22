@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
+</head>
+<body>
+<h1 class="display-4 text-center">Edit Nutrition</h1>
+<form class="text-center" action="#" th:action="@{'/nutrition/editfromproduct/'+${nutrition.id}}" th:object="${nutrition}"
+      method="post">
+    <div class="container mx-auto" style="width: 600px;">
+        <table class="table table-bordered table-hover">
+            <tr>
+                <td class="table-inverse">ID</td>
+                <td th:text="${nutrition.id}"></td>
+            </tr>
+            <tr>
+                <td class="table-inverse">Product</td>
+                <td><input type="text" th:field="*{product}"/></td>
+                <td th:if="${#fields.hasErrors('product')}" th:errors="*{product}" class="alert alert-warning"
+                    role="alert">
+                    Product Error
+                </td>
+            </tr>
+            <tr>
+                <td class="table-inverse">Carbs</td>
+                <td><input type="text" th:field="*{carbs}"/></td>
+                <td th:if="${#fields.hasErrors('carbs')}" th:errors="*{carbs}" class="alert alert-warning" role="alert">
+                    Carb Error
+                </td>
+            </tr>
+            <tr>
+                <td class="table-inverse">Calories</td>
+                <td><input type="text" th:field="*{calories}"/></td>
+                <td th:if="${#fields.hasErrors('calories')}" th:errors="*{calories}" class="alert alert-warning"
+                    role="alert">Calorie Error
+                </td>
+            </tr>
+            <tr>
+                <td class="table-inverse">Food Group</td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{group}">
+                            <option value=""></option>
+                            <option th:each="group:${foodGroup}" th:value="${group}"
+                                    th:text="${group}"></option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="table-inverse">Favorite</td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{favorite}">
+                            <option value=""></option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="table-inverse">Product ID</td>
+                <td>
+                    <div class="form-group">
+                        <select class="form-control" th:field="*{productid}">
+                            <option th:value="${nutrition.productid}" th:text="${nutrition.productid}"></option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <p><input type="submit" value="Save"/> <a th:href="'/product/'+${nutrition.productid}"><input type="button"
+                                                                                                  value="Cancel"/></a></p>
+</form>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+</body>
+</html>

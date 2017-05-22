@@ -59,6 +59,26 @@ public class NutritionController {
         return "nutrition";
     }
 
+    @GetMapping("/nutrition/addproduct/{id}")
+    public String addProductIdToNutrition(Model model, @PathVariable("id") Long product_id){
+        Nutrition nutrition = new Nutrition();
+        nutrition.setProductid(product_id);
+        model.addAttribute("nutrition", nutrition);
+        model.addAttribute("foodGroup", FoodGroup.values());
+        return "nutritionForProduct";
+    }
+
+    @PostMapping("/nutrition/addproduct/{id}")
+    public String submitAddProductIdToNutrition(Model model, @Valid Nutrition nutrition, BindingResult bindingResult, @PathVariable("id") Long product_id){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("foodGroup", FoodGroup.values());
+            model.addAttribute("nutrition", nutrition);
+            return "nutritionForProductError";
+        }
+        nutritionService.add(nutrition);
+        return "redirect:/product/"+product_id;
+    }
+
     @PostMapping("/nutrition")
     public String nutritionSubmit(Model model, @Valid Nutrition nutrition, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
@@ -80,7 +100,6 @@ public class NutritionController {
     @GetMapping("nutrition/edit/{id}")
     public String edit(Model model, @PathVariable("id") Long id){
         model.addAttribute("nutrition",nutritionService.find(id));
-        System.out.println("!!!\n"+nutritionService.find(id));
         model.addAttribute("foodGroup", FoodGroup.values());
         model.addAttribute("productList",productService.findAllIds());
         return "edit";
@@ -93,19 +112,40 @@ public class NutritionController {
             model.addAttribute("productList",productService.findAllIds());
             return "editError";
         }
-        System.out.println("!!!!\n"+nutrition.getId());
-        System.out.println("!!!!\n"+id);
         nutritionService.update(nutrition);
         model.addAttribute("nutrition",nutritionService.find(id));
         return "view";
     }
 
+    @GetMapping("nutrition/editfromproduct/{id}")
+    public String editFromProduct(Model model, @PathVariable("id") Long id){
+        model.addAttribute("nutrition",nutritionService.find(id));
+        model.addAttribute("foodGroup", FoodGroup.values());
+        return "editFromProduct";
+    }
+
+    @PostMapping("nutrition/editfromproduct/{id}")
+    public String submitEditFromProduct(Model model, @Valid Nutrition nutrition, BindingResult bindingResult, @PathVariable("id") Long id){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("foodGroup",FoodGroup.values());
+            return "editFromProductError";
+        }
+        nutritionService.update(nutrition);
+        return "redirect:/product/"+nutrition.getProductid();
+    }
+
     @PostMapping("/nutrition/delete/{id}")
     public String delete(Model model, @PathVariable("id") Long id){
-        System.out.println("!!!!\n in deletenutritionsmethod");
         nutritionService.delete(id);
         model.addAttribute("nutritionList",nutritionService.findAll());
         return "redirect:/nutritions";
+    }
+
+    @PostMapping("/nutrition/deletefromproduct/{id}")
+    public String deleteFromProduct(Model model, @PathVariable("id") Long id){
+        Long product_id = nutritionService.find(id).getProductid();
+        nutritionService.delete(id);
+        return "redirect:/product/"+product_id;
     }
 
     @ExceptionHandler(value = Exception.class)
