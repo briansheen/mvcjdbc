@@ -61,7 +61,6 @@ public class ProductController {
             return "productError";
         }
         productService.add(product);
-        System.out.println("!!!!\n"+product.getId());
         model.addAttribute(productService.findAll());
         return "products";
     }
@@ -85,7 +84,6 @@ public class ProductController {
     @GetMapping("/product/edit/{id}")
     public String editProduct(Model model, @PathVariable("id") Long product_id){
         model.addAttribute("product", productService.find(product_id));
-        System.out.println("!!!\n"+productService.find(product_id));
         model.addAttribute("productNutritions",productService.findNutritionsWithProduct(product_id));
         return "editProduct";
     }
