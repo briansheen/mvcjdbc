@@ -26,47 +26,47 @@ public class ProductServiceTest {
     Random random = new Random();
 
     @Autowired
-    ProductDao productDao;
+    ProductService productService;
 
     @Autowired
-    NutritionDao nutritionDao;
+    NutritionService nutritionService;
 
     @Test
     @Transactional
     public void testCreate() {
         Product product = createProduct();
         Assert.assertNotNull(product);
-        productDao.add(product);
-        Assert.assertNotNull(productDao.find(product.getId()));
+        productService.add(product);
+        Assert.assertNotNull(productService.find(product.getId()));
     }
 
     @Test
     @Transactional
     public void testAddNutritionToProduct() {
         Product product = createProduct();
-        productDao.add(product);
+        productService.add(product);
         NutritionServiceTest nutritionServiceTest = new NutritionServiceTest();
         Nutrition nutrition = nutritionServiceTest.createRandomNutrition();
-        nutritionDao.add(nutrition);
-        productDao.addProductToNutrition(product, nutrition);
-        Assert.assertNotNull(nutritionDao.find(nutrition.getId()));
-        Assert.assertEquals(product.getId(), nutritionDao.find(nutrition.getId()).getProductid().longValue());
+        nutritionService.add(nutrition);
+        productService.addProductToNutrition(product, nutrition);
+        Assert.assertNotNull(nutritionService.find(nutrition.getId()));
+        Assert.assertEquals(product.getId(), nutritionService.find(nutrition.getId()).getProductid().longValue());
     }
 
     @Test
     @Transactional
     public void testRemoveProductFromNutritions() {
         Product product = createProduct();
-        productDao.add(product);
+        productService.add(product);
         List<Nutrition> nutritionList = createNutritionList();
-        nutritionDao.add(nutritionList);
-        productDao.addProductToNutritions(nutritionList, product);
+        nutritionService.add(nutritionList);
+        productService.addProductToNutritions(nutritionList, product);
         for (Nutrition nutrition : nutritionList) {
-            Assert.assertEquals(product.getId(), nutritionDao.find(nutrition.getId()).getProductid().longValue());
+            Assert.assertEquals(product.getId(), nutritionService.find(nutrition.getId()).getProductid().longValue());
         }
-        productDao.removeProductFromNutritions(nutritionList);
+        productService.removeProductFromNutritions(nutritionList);
         for (Nutrition nutrition : nutritionList) {
-            Assert.assertEquals(null, nutritionDao.find(nutrition.getId()).getProductid());
+            Assert.assertEquals(null, nutritionService.find(nutrition.getId()).getProductid());
         }
     }
 
@@ -74,31 +74,31 @@ public class ProductServiceTest {
     @Transactional
     public void testDeleteProduct() {
         Product product = createProduct();
-        productDao.add(product);
+        productService.add(product);
         List<Nutrition> nutritionList = createNutritionList();
-        nutritionDao.add(nutritionList);
-        productDao.addProductToNutritions(nutritionList,product);
-        List<Nutrition> nutritionsWithProductAdded = productDao.findNutritionsWithProduct(product.getId());
+        nutritionService.add(nutritionList);
+        productService.addProductToNutritions(nutritionList,product);
+        List<Nutrition> nutritionsWithProductAdded = productService.findNutritionsWithProduct(product.getId());
         Assert.assertNotNull(nutritionsWithProductAdded);
         Assert.assertEquals(3,nutritionsWithProductAdded.size());
-        productDao.removeProductFromNutritions(nutritionList);
-        productDao.deleteProduct(product.getId());
-        Assert.assertNull(productDao.find(product.getId()));
+        productService.removeProductFromNutritions(nutritionList);
+        productService.deleteProduct(product.getId());
+        Assert.assertNull(productService.find(product.getId()));
     }
 
     @Test
     @Transactional
     public void testUpdateProduct(){
         Product product = createProduct();
-        productDao.add(product);
+        productService.add(product);
         product.setName("update");
         product.setBrand(null);
-        productDao.updateProduct(product);
-        Assert.assertEquals(product, productDao.find(product.getId()));
+        productService.updateProduct(product);
+        Assert.assertEquals(product, productService.find(product.getId()));
         product.setName("update2");
         product.setBrand("new");
-        productDao.updateProduct (product);
-        Assert.assertEquals(product, productDao.find(product.getId()));
+        productService.updateProduct (product);
+        Assert.assertEquals(product, productService.find(product.getId()));
     }
 
     public Product createProduct() {
