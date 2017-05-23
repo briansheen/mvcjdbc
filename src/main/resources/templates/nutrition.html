@@ -54,9 +54,8 @@
             <td>
                 <div class="form-group">
                     <select class="form-control" th:field="*{productid}">
-                        <option value=""></option>
-                        <option th:each="productid:${productList}" th:value="${productid}"
-                                th:text="${productid}"></option>
+                        <option th:each="product:${productList}" th:value="${product.id}"
+                                th:text="${product.id}+': '+${product.name}"></option>
                     </select>
                 </div>
             </td>

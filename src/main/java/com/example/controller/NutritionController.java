@@ -55,7 +55,7 @@ public class NutritionController {
     public String addNutrition(Model model) {
         model.addAttribute("nutrition", new Nutrition());
         model.addAttribute("foodGroup", FoodGroup.values());
-        model.addAttribute("productList",productService.findAllIds());
+        model.addAttribute("productList",productService.findAll());
         return "nutrition";
     }
 
@@ -83,7 +83,7 @@ public class NutritionController {
     public String nutritionSubmit(Model model, @Valid Nutrition nutrition, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             model.addAttribute("foodGroup", FoodGroup.values());
-            model.addAttribute("productList",productService.findAllIds());
+            model.addAttribute("productList",productService.findAll());
             return "nutritionError";
         }
         nutritionService.add(nutrition);
@@ -101,7 +101,7 @@ public class NutritionController {
     public String edit(Model model, @PathVariable("id") Long id){
         model.addAttribute("nutrition",nutritionService.find(id));
         model.addAttribute("foodGroup", FoodGroup.values());
-        model.addAttribute("productList",productService.findAllIds());
+        model.addAttribute("productList",productService.findAll());
         return "edit";
     }
 
@@ -109,7 +109,7 @@ public class NutritionController {
     public String editSubmit(Model model, @Valid Nutrition nutrition, BindingResult bindingResult, @PathVariable("id") Long id){
         if(bindingResult.hasErrors()){
             model.addAttribute("foodGroup",FoodGroup.values());
-            model.addAttribute("productList",productService.findAllIds());
+            model.addAttribute("productList",productService.findAll());
             return "editError";
         }
         nutritionService.update(nutrition);

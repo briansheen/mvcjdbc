@@ -62,10 +62,10 @@ public class NutritionDaoImpl implements NutritionDao {
                 } else {
                     ps.setBoolean(5, nutrition.getFavorite());
                 }
-                if(nutrition.getProductid() == null){
-                    ps.setNull(6,Types.INTEGER);
+                if (nutrition.getProductid() == null) {
+                    ps.setNull(6, Types.INTEGER);
                 } else {
-                    ps.setLong(6,nutrition.getProductid());
+                    ps.setLong(6, nutrition.getProductid());
                 }
                 ps.setLong(7, nutrition.getId());
 
@@ -110,10 +110,10 @@ public class NutritionDaoImpl implements NutritionDao {
                     } else {
                         ps.setBoolean(5, nutrition.getFavorite());
                     }
-                    if(nutrition.getProductid()== null){
-                        ps.setNull(6,Types.INTEGER);
+                    if (nutrition.getProductid() == null) {
+                        ps.setNull(6, Types.INTEGER);
                     } else {
-                        ps.setLong(6,nutrition.getProductid());
+                        ps.setLong(6, nutrition.getProductid());
                     }
                     return ps;
                 }
@@ -144,9 +144,7 @@ public class NutritionDaoImpl implements NutritionDao {
             if (resultSet.getObject("favorite") != null) {
                 nutrition.setFavorite(resultSet.getBoolean("favorite"));
             }
-            if (resultSet.getObject("product_id") != null) {
-                nutrition.setProductid(resultSet.getLong("product_id"));
-            }
+            nutrition.setProductid(resultSet.getLong("product_id"));
             return nutrition;
         }
     }

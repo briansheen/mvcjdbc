@@ -41,11 +41,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Long> findAllIds() {
-        return productDao.findAllIds();
-    }
-
-    @Override
     @Transactional
     public void addProductToNutrition(Product product, Nutrition nutrition) {
         productDao.addProductToNutrition(product, nutrition);

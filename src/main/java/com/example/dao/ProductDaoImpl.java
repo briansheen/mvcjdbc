@@ -58,12 +58,6 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Long> findAllIds(){
-        List<Long> productIdList=jdbcTemplate.queryForList("SELECT id FROM product", Long.class);
-        return productIdList;
-    }
-
-    @Override
     public Product find(long product_id) {
         try {
             return jdbcTemplate.queryForObject("SELECT * FROM product WHERE id = ?", new ProductMapper(), product_id);

@@ -18,8 +18,6 @@ public interface ProductService {
 
     Product find(long product_id);
 
-    List<Long> findAllIds();
-
     void addProductToNutrition(Product product, Nutrition nutrition);
 
     void addProductToNutritions(List<Nutrition> nutritions, Product product);
