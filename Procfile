@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/mvcjdbc-0.1.0.jar
+web: java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar target/mvcjdbc-0.1.0.jar
